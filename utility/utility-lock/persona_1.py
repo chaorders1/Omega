@@ -21,8 +21,6 @@ CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
 MAX_IMAGE_SIZE = 1.15  # megapixels
-DEFAULT_IMAGE_FOLDER = os.environ.get('DEFAULT_IMAGE_FOLDER', os.path.join('Data', 'beidasaolun_picture'))
-OUTPUT_DIRECTORY = os.environ.get('OUTPUT_DIRECTORY', 'Data')
 
 # Define your complex prompt here
 ANALYSIS_PROMPT = """
@@ -220,27 +218,13 @@ def main():
     """
     Main function to run the image analysis process.
     """
-    # Get the script's directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # Construct default paths relative to the script's location
-    default_image_folder = os.path.normpath(os.path.join(script_dir, '..', DEFAULT_IMAGE_FOLDER))
-    default_output_dir = os.path.normpath(os.path.join(script_dir, '..', OUTPUT_DIRECTORY))
-
-    # Prompt user for image folder, use default if no input is provided
-    image_folder = input(f"Enter the path to the image folder (press Enter to use default: {default_image_folder}): ").strip()
-    if not image_folder:
-        image_folder = default_image_folder
-
+    image_folder = "/Users/yuanlu/Desktop/test"
     folder_name = os.path.basename(image_folder)
-    output_file = os.path.join(default_output_dir, f"analysis_results_{folder_name}.txt")
+    output_file = f"analysis_results_{folder_name}.txt"
     
     if not os.path.isdir(image_folder):
         logger.error(f"Error: The directory '{image_folder}' does not exist.")
         return
-
-    # Ensure the output directory exists
-    os.makedirs(default_output_dir, exist_ok=True)
 
     try:
         analyze_images(image_folder, output_file)
