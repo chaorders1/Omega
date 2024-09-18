@@ -21,7 +21,7 @@ CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
 MAX_IMAGE_SIZE = 1.15  # megapixels
-DEFAULT_IMAGE_FOLDER = os.environ.get('DEFAULT_IMAGE_FOLDER', os.path.join('Data', 'beidasaolun_picture'))
+DEFAULT_IMAGE_FOLDER = os.environ.get('DEFAULT_IMAGE_FOLDER', os.path.join('Data', 'test_picture'))
 OUTPUT_DIRECTORY = os.environ.get('OUTPUT_DIRECTORY', 'Data')
 
 # Define your complex prompt here
@@ -58,7 +58,7 @@ C. 内容制作专业度 (Content Production Professionalism)
 C1. 视频长度 / 内容节奏 (Video Length / Content Pacing)
 C2. 使用的特效和转场 (Special Effects and Transitions)
 C3. 音乐选择和配音风格 (Music Selection and Voice-over Style)
-C4. 一致性 / 系列化 (Consistency / Serialization)
+C4. 一���性 / 系列化 (Consistency / Serialization)
 C5. 热点敏感度 / 内容长青度 (Trend Sensitivity / Evergreen Content)
 C6. 对独特性 / 原创性要求 (Uniqueness / Originality Requirements)
 C7. 适合的品牌合作类型／潜在的达人合作机会 (Suitable Brand Collaborations / Potential Influencer Partnerships)
@@ -185,7 +185,9 @@ def analyze_images(image_folder: str, output_file: str) -> None:
     data = {
         'model': 'claude-3-sonnet-20240229',
         'max_tokens': 2000,
-        'temperature': 0,
+        'temperature': 1.0,
+        #'top_k': 40,  # Added top_k parameter
+        #'top_p': 0.95,  # Added top_p parameter
         'messages': [
             {
                 'role': 'user',
