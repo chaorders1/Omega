@@ -1,26 +1,37 @@
 import os
 import whisper
+import torch
 from datetime import timedelta
 
-def generate_srt(audio_path, output_path=None):
+def generate_srt(audio_path, output_path=None, language=None):
     """
-    Generate an SRT file from an audio file using OpenAI's Whisper medium model.
+    Generate an SRT file from an audio file using OpenAI's Whisper large model.
     
     Args:
     audio_path (str): Path to the input audio file.
-    output_path (str, optional): Path to save the output SRT file. If not provided,
-                                 it will be saved in the same directory as the audio file.
+    output_path (str, optional): Path to save the output SRT file.
+    language (str, optional): Language code (e.g., 'en' for English, 'zh' for Chinese).
     
     Returns:
     str: Path to the generated SRT file.
     """
-    # Load the Whisper medium model
-    model = whisper.load_model("medium")
+    # Load the Whisper large model
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = whisper.load_model("large", device=device)
     
-    # Transcribe the audio
-    result = model.transcribe(audio_path)
+    print(f"Transcribing audio using large model on {device}... This may take a while.")
     
-    # Generate SRT content
+    # Transcribe with more options
+    result = model.transcribe(
+        audio_path,
+        language=language,
+        word_timestamps=True,
+        verbose=True
+    )
+    
+    print("Transcription complete. Generating SRT file...")
+    
+    # Generate SRT content with word-level timestamps
     srt_content = ""
     for i, segment in enumerate(result["segments"], start=1):
         start_time = timedelta(seconds=segment["start"])
@@ -52,5 +63,6 @@ def format_timedelta(td):
 
 if __name__ == "__main__":
     audio_path = input("Enter the path to your audio file: ").strip("'\"")
-    srt_path = generate_srt(audio_path)
+    language = input("Enter the language code (e.g., 'en' for English, 'zh' for Chinese), or press Enter to auto-detect: ").strip() or None
+    srt_path = generate_srt(audio_path, language=language)
     print(f"SRT file generated successfully: {srt_path}")
