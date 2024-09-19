@@ -26,55 +26,55 @@ OUTPUT_DIRECTORY = os.environ.get('OUTPUT_DIRECTORY', 'Data')
 
 # Define your complex prompt here
 ANALYSIS_PROMPT = """
-You will be analyzing a social media influencer's persona based on a set of images. The goal is to provide a comprehensive understanding of the influencer's content strategy, target audience, and production quality across all provided images.
+You will be analyzing a social media influencer's short video content based on the provided information. Your task is to evaluate the influencer using a specific analysis framework. Your evaluation should be vivid, descriptive, and easy to understand. Pay close attention to the word count requirements in parentheses. Strictly follow the framework structure and maintain consistent formatting.
 
-Please analyze the influencer's persona according to the following structure, addressing EACH point specifically:
+Here is the influencer data you will be analyzing:
 
-A. 人设定位 (Persona Positioning)
-A1. 视角 (Perspective)
-A2. 粗分领域 (Broad Field)
-A3. 细分领域 (Specific Field)
-A4. 专业程度 (Level of Expertise)
-A5. 自我标签 (Self-Labels)
-A6. 语言特点 (Language Characteristics)
-A7. 个人形象 (Personal Image)
-A8. 情感倾向 / 价值观 (Emotional Tendency / Values)
-A9. 审美 (Aesthetics)
-A10. 叙事结构和故事性 (Narrative Structure and Storytelling)
-A11. 布景／场地 (Setting / Location)
+<influencer_data>
+{{INFLUENCER_DATA}}
+</influencer_data>
 
-B. 目标受众 (Target Audience)
-B1. 年龄 / 婚姻状况 (Age / Marital Status)
-B2. 地域 (Geographic Location)
-B3. 教育背景 / 职业 (Educational Background / Occupation)
-B4. 经济状况 / 生活方式 (Economic Status / Lifestyle)
-B5. 是否是特定群体 (Specific Group Affiliation)
-B6. 目标受众的痛点 (Target Audience Pain Points)
-B7. 博主与受众的互动性 (Influencer-Audience Interaction)
-B8. 博主与受众是否有强粘性 (Influencer-Audience Stickiness)
-B9. 视频播放量、点赞率、评论率 (Video Views, Like Rate, Comment Rate)
+Please provide your analysis using the following structure:
 
-C. 内容制作专业度 (Content Production Professionalism)
-C1. 视频长度 / 内容节奏 (Video Length / Content Pacing)
-C2. 使用的特效和转场 (Special Effects and Transitions)
-C3. 音乐选择和配音风格 (Music Selection and Voice-over Style)
-C4. 一���性 / 系列化 (Consistency / Serialization)
-C5. 热点敏感度 / 内容长青度 (Trend Sensitivity / Evergreen Content)
-C6. 对独特性 / 原创性要求 (Uniqueness / Originality Requirements)
-C7. 适合的品牌合作类型／潜在的达人合作机会 (Suitable Brand Collaborations / Potential Influencer Partnerships)
-C8. 技术水平 (Technical Skill Level)
-C9. SEO意识和推广策略 (SEO Awareness and Promotion Strategy)
-C10. 潜在的负面影响和应对策略 (Potential Negative Impacts and Mitigation Strategies)
-
-Provide your analysis in a structured format, using the section headers A, B, and C, and numbering each point as shown above (A1, A2, A3, etc.). Address EVERY point specifically. If any point cannot be determined from the given information, state so clearly for that specific point.
-
-Begin your response with:
 <analysis>
+A. 人设定位 (Persona Positioning)
+A1. 视角＋年龄性别＋定位: (Describe in about 30 characters, e.g., 第一视角＋中年女性＋真实生活, 第一视角＋年轻男性＋校园搞笑短剧, 第三视角＋年轻女性居多＋情感短剧)
+A2. 粗分领域: (List 1-2 broad categories, e.g., 美食, 旅行, 科技, 时尚, 教育, 情感, 游戏)
+A3. 细分领域: (Describe in about 20 characters, e.g., 实用粤菜菜谱)
+A4. 专业程度: (Provide a score from 1-5 and a brief evaluation)
+[1分：无专业性，纯分享生活; 2分：低专业性，博主有少量经验; 3分：有一定专业性，博主有很多经验; 4分：较高专业性，博主是业余专家; 5分：极高专业性，博主是领域权威]
+A5. 自我标签: (List 4-5 self-labels, e.g., "宠妻达人", "育儿专家")
+A6. 语言特点: (Describe in about 20 characters, e.g., 幽默, 严肃, 温馨, 搞笑)
+A7. 个人形象: (Describe in about 50 characters, e.g., 温和, 真实, 接地气, 有亲和力)
+A8. 情感倾向 / 价值观: (Describe in about 50 characters, e.g., 传递温暖、注重家庭互动, 或注重宏观，善于提炼)
+A9. 叙事结构和故事性: (Provide a score from 1-5)
+[1分-无故事性, 2分-差故事性, 3分-一般故事性, 4分-高故事性, 5分-每一个视频都讲述故事]
+[If the score is 4 or above, analyze whether the stories have high conflict]
+A10. 审美: (Describe color schemes, composition methods, and style preferences in about 50 characters)
+A11. 主要布景／场地: (List 2-3 main settings, e.g., 室内家庭, 室内餐馆, 室内高铁)
 
-End your response with:
+B. 内容表现 (Content Performance)
+B1. 高赞视频特点: (Summarize in about 100 characters, focusing on videos with over 10,000 likes. Pay special attention to the like rate next to the heart symbol)
+B2. 高赞视频比例: (Estimate the proportion of videos with over 10,000 likes compared to total videos)
+B3. 博主与受众的粘性: (Comment briefly in about 50 characters on whether there is strong stickiness between the influencer and the audience)
+
+C. 目标受众 (Target Audience)
+C1. 年龄/性别／婚姻状况: (Describe in about 20 characters, e.g., ２０－２５岁 单身女性)
+C2. 地域: (List 1-2 main regions, e.g., 中国南方)
+C3. 教育背景/ 职业: (List 2-3 main categories, e.g., 学生, 白领)
+C4. 经济状况/ 生活方式: (Describe in about 30 characters, e.g., 中产, 喜欢户外运动)
+C5. 特定群体或喜好/ 亚文化: (List 1-2 specific interests or subcultures, e.g., 骑行, 对战游戏, 波斯猫控)
+C6. 受众痛点: (Describe in about 50 characters what the audience needs most)
+C7. 博主与受众的互动性: (Mention if there are interactive elements like Q&As or challenges)
+
+D. 总结 (Summary)
+D1. [Provide a summary of approximately 500 characters, focusing on the influencer's persona and account characteristics. Include specific examples from the videos when possible. Do not provide recommendations.]
+
 </analysis>
 
-Remember to base your analysis on all provided images and avoid making assumptions beyond the given information. Ensure that you address each numbered point individually and comprehensively.
+When providing scores or evaluations, always explain your reasoning before giving the actual score. This helps to justify your assessment and provides more context for the reader.
+
+For the summary section, focus on synthesizing the key points from your analysis, highlighting the most distinctive aspects of the influencer's persona and content. Include specific examples from their videos to illustrate your points, but avoid making recommendations or suggestions for improvement.
 """
 
 def resize_image(img: Image.Image, max_size: float = MAX_IMAGE_SIZE) -> Image.Image:
@@ -183,7 +183,7 @@ def analyze_images(image_folder: str, output_file: str) -> None:
     }
     
     data = {
-        'model': 'claude-3-sonnet-20240229',
+        'model': 'claude-3-5-sonnet-20240620',
         'max_tokens': 2000,
         'temperature': 1.0,
         #'top_k': 40,  # Added top_k parameter
