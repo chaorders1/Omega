@@ -33,7 +33,25 @@ INPUT_DIRECTORY = os.path.join(os.path.dirname(current_dir), 'Data', 'test_txt')
 OUTPUT_DIRECTORY = os.path.join(os.path.dirname(current_dir), 'Data', 'test_txt')
 
 COMPARISON_PROMPT = """
-这两个文件中有两位短视频博主的画像，请给出在A大项中两位博主的相似度的"人设相似度评分"0%为截然不同，100%为完全一致：A1项权重40%  A3 项权重20%  A5 项权重20%  A6权重10%  A8 项权重10%，其他Ａ项权重平均如果A大项评分小于70%可以忽略下一步。如果A大项评分大与70%请继续分析Ｂ和C大项的异同，并给出"值得模仿评分"(0%为无法模仿，100%为完全可以复制）
+上载的几个文件中有数位短视频博主的画像，请以'北大老孙.txt'为参考，给出在A项中其他几位博主与'北大老孙.txt'相似度的"人设相似度评分"　0%为截然不同，100%为完全一致。用下表中权重：
+
+A1: 视角+年龄性别+定位 25%
+A2: 粗分领域 5%
+A3: 细分领域 12%
+A4: 专业程度 5%
+A5: 自我标签 12%
+A6: 语言特点 8%
+A7: 个人形象 5%
+A8: 情感倾向/价值观 8%
+A9.叙事结构和故事性 10%
+A10: 审美风格 5%
+A11.主要布景／场地 5%
+
+如果A项评分小于70%可以忽略下一步。如果A项评分大于70%请继续分析Ｂ，Ｃ，Ｄ项的异同，并给出以'北大老孙.txt'为参考的"值得模仿评分" (0%为'北大老孙.txt'无法模仿，100%为'北大老孙.txt'完全可以复制）
+
+B. 内容策略 50%
+C. 受众画像 25%
+D. 制作专业度 25%
 
 Here are the influencer analyses you will be comparing:
 
@@ -43,13 +61,13 @@ Please provide your analysis using the following structure:
 
 <analysis>
 1. 人设相似度评分: [评分]%
-   (详细说明各项权重的计算过程和结果)
+   (详细说明各A项权重的计算过程和结果)
 
 2. 值得模仿评分: [如果适用，给出评分]%
-   (如果A大项评分大于70%，分析B和C大项的异同，并解释评分理由)
+   (如果A项评分大于70%，分析B、C和D项的异同，并解释评分理由)
 
 3. 总结:
-   (简要总结两位博主的主要相似点和差异，以及可能的模仿价值)
+   (简要总结该博主与'北大老孙.txt'的主要相似点和差异，以及可能的模仿价值)
 </analysis>
 
 请确保您的分析基于提供的信息，客观公正，不要做出超出给定数据的假设。
@@ -94,7 +112,7 @@ def compare_influencers(analyses: Dict[str, str], output_file: str) -> None:
     
     data = {
         'model': 'claude-3-5-sonnet-20240620',
-        'max_tokens': 2000,
+        'max_tokens': 5000,
         'temperature': 1.0,
         'messages': [
             {

@@ -37,39 +37,44 @@ Here is the influencer data you will be analyzing:
 Please provide your analysis using the following structure:
 
 <analysis>
-A. 人设定位 (Persona Positioning)
-A1. 视角＋年龄性别＋定位: (Describe in about 30 characters, e.g., 第一视角＋中年女性＋真实生活, 第一视角＋年轻男性＋校园搞笑短剧, 第三视角＋年轻女性居多＋情感短剧)
-A2. 粗分领域: (List 1-2 broad categories, e.g., 美食, 旅行, 科技, 时尚, 教育, 情感, 游戏)
-A3. 细分领域: (Describe in about 20 characters, e.g., 实用粤菜菜谱)
-A4. 专业程度: (Provide a score from 1-5 and a brief evaluation)
-[1分：无专业性，纯分享生活; 2分：低专业性，博主有少量经验; 3分：有一定专业性，博主有很多经验; 4分：较高专业性，博主是业余专家; 5分：极高专业性，博主是领域权威]
-A5. 自我标签: (List 4-5 self-labels, e.g., "宠妻达人", "育儿专家")
-A6. 语言特点: (Describe in about 20 characters, e.g., 幽默, 严肃, 温馨, 搞笑)
-A7. 个人形象: (Describe in about 50 characters, e.g., 温和, 真实, 接地气, 有亲和力)
-A8. 情感倾向 / 价值观: (Describe in about 50 characters, e.g., 传递温暖、注重家庭互动, 或注重宏观，善于提炼)
-A9. 叙事结构和故事性: (Provide a score from 1-5)
-[1分-无故事性, 2分-差故事性, 3分-一般故事性, 4分-高故事性, 5分-每一个视频都讲述故事]
-[If the score is 4 or above, analyze whether the stories have high conflict]
-A10. 审美: (Describe color schemes, composition methods, and style preferences in about 50 characters)
-A11. 主要布景／场地: (List 2-3 main settings, e.g., 室内家庭, 室内餐馆, 室内高铁)
+A. 人设定位
+A1. 视角＋年龄性别＋定位: (约30字, 如第一视角＋中年女性＋真实生活, 第一视角＋年轻男性＋校园搞笑短剧, 第三视角＋年轻女性居多＋情感短剧)
+A2. 粗分领域: (列出1-2个大类, 如美食, 旅行, 科技, 时尚, 教育, 情感, 游戏)
+A3. 细分领域: (约20字, 如实用粤菜菜谱)
+A4. 专业程度: (给出1-4分的评分及简单评价)
+[1分：无专业性，分享生活点滴; 2分：低专业性，比如分享某几次相关经验; 3分：较高专业性，博主是业余专家; 4分：极高专业性，博主是领域业内权威]
+A5. 自我标签: (列出4-5个, 如"宠妻达人", "育儿专家")
+A6. 语言特点: (约20字, 如幽默, 严肃, 温馨, 搞笑)
+A7. 个人形象: (约50字, 如温和, 真实, 接地气, 有亲和力)
+A8. 情感倾向 / 价值观: (约50字, 如传递温暖、注重家庭互动, 或注重宏观，善于提炼)
+A9. 叙事结构和故事性: (给出1-4分的评分)
+[1分-无故事性,随手拍或分享生活; 2分-低故事性，教育观众或解释某些事物; 3分-一般故事性,很多视频都有故事内容; 4分-几乎全部视频都讲述故事]
+A10. 审美: (约50字, 简单说明色彩搭配，构图方式，风格偏好)
+A11. 主要布景／场地: (列出2-3个, 如室内家庭, 室内餐馆, 室内高铁)
 
-B. 内容表现 (Content Performance)
-B1. 高赞视频特点: (Summarize in about 100 characters, focusing on videos with over 10,000 likes. Pay special attention to the like rate next to the heart symbol)
-B2. 高赞视频比例: (Estimate the proportion of videos with over 10,000 likes compared to total videos)
-B3. 博主与受众的粘性: (Comment briefly in about 50 characters on whether there is strong stickiness between the influencer and the audience)
+B. 内容策略
+B1. 高赞视频主题: (约100字, 总结点赞数高于一万的视频的主题和大概规律。特别注意心形符号旁的点赞率)
+B2. 高赞视频如何击中受众痛点: (最多5点, 共约50字, 总结点赞数高于一万的视频为什么能吸引受众)
+B3. 博主与受众的粘性: (约50字, 简单评论博主与受众是否有强粘性)
 
-C. 目标受众 (Target Audience)
-C1. 年龄/性别／婚姻状况: (Describe in about 20 characters, e.g., ２０－２５岁 单身女性)
-C2. 地域: (List 1-2 main regions, e.g., 中国南方)
-C3. 教育背景/ 职业: (List 2-3 main categories, e.g., 学生, 白领)
-C4. 经济状况/ 生活方式: (Describe in about 30 characters, e.g., 中产, 喜欢户外运动)
-C5. 特定群体或喜好/ 亚文化: (List 1-2 specific interests or subcultures, e.g., 骑行, 对战游戏, 波斯猫控)
-C6. 受众痛点: (Describe in about 50 characters what the audience needs most)
-C7. 博主与受众的互动性: (Mention if there are interactive elements like Q&As or challenges)
+C. 受众画像
+C1. 年龄/性别／婚姻状况: (约20字, 如２０－２５岁 单身女性)
+C2. 地域: (列出1-2个主要地区, 如中国南方)
+C3. 教育背景/ 职业: (列出2-3个主要类别, 如学生, 白领)
+C4. 经济状况/ 生活方式: (约30字, 如中产, 喜欢户外运动)
+C5. 特定群体或喜好/ 亚文化: (列出1-2个, 如骑行, 对战游戏, 波斯猫控)
+C6. 受众痛点: (约50字, 受众最需要什么)
+C7. 博主与受众的互动性: (提及是否包括互动元素如问答或挑战)
 
-D. 总结 (Summary)
-D1. [Provide a summary of approximately 300 characters, focusing on the influencer's persona and account characteristics. Include specific examples from the videos when possible. Do not provide recommendations.]
+D. 制作专业度
+D1. 拍摄环境和设备要求
+D2. 内容创作技能要求
+D3. 时间投入要求
+D4. 个人经历和专业背景
+D5. 更新频率和持续性
 
+E. 总结
+(约300字, 主要提炼人设及账户特点，最好加上视频中的例子，不需要提建议)
 </analysis>
 
 Remember to adhere strictly to the word count requirements and maintain consistent formatting throughout your analysis. Base your evaluation solely on the information provided in the influencer data. If certain information is not available or unclear, you may use phrases like "Based on the available information..." or "It appears that..." to indicate uncertainty.
