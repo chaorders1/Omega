@@ -68,9 +68,11 @@ C6. 受众痛点: (Describe in about 50 characters what the audience needs most)
 C7. 博主与受众的互动性: (Mention if there are interactive elements like Q&As or challenges)
 
 D. 总结 (Summary)
-D1. [Provide a summary of approximately 500 characters, focusing on the influencer's persona and account characteristics. Include specific examples from the videos when possible. Do not provide recommendations.]
+D1. [Provide a summary of approximately 300 characters, focusing on the influencer's persona and account characteristics. Include specific examples from the videos when possible. Do not provide recommendations.]
 
 </analysis>
+
+Remember to adhere strictly to the word count requirements and maintain consistent formatting throughout your analysis. Base your evaluation solely on the information provided in the influencer data. If certain information is not available or unclear, you may use phrases like "Based on the available information..." or "It appears that..." to indicate uncertainty.
 
 When providing scores or evaluations, always explain your reasoning before giving the actual score. This helps to justify your assessment and provides more context for the reader.
 
