@@ -1,0 +1,10 @@
+anthropic
+moviepy
+pillow
+pytesseract
+selenium
+requests
+tenacity
+ratelimit
+webdriver-manager
+pytest  # If you are using pytest for testing
