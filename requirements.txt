@@ -8,3 +8,4 @@ tenacity
 ratelimit
 webdriver-manager
 pytest  # If you are using pytest for testing
+colorama
