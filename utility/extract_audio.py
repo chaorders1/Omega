@@ -3,7 +3,7 @@ from moviepy.editor import VideoFileClip
 
 def extract_audio(video_path, output_format='mp3'):
     """
-    Extract audio from a video file.
+    Extract audio from a video file and save it in the Data directory.
     
     Args:
     video_path (str): Path to the input video file.
@@ -16,8 +16,13 @@ def extract_audio(video_path, output_format='mp3'):
         # Get the video file name without extension
         video_name = os.path.splitext(os.path.basename(video_path))[0]
         
+        # Create the output folder in the Data directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_dir = os.path.join(os.path.dirname(script_dir), 'Data')
+        os.makedirs(data_dir, exist_ok=True)
+        
         # Create output audio file path
-        output_path = f"{video_name}_audio.{output_format}"
+        output_path = os.path.join(data_dir, f"{video_name}_audio.{output_format}")
         
         # Load the video file
         video = VideoFileClip(video_path)

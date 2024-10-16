@@ -127,3 +127,21 @@ dmypy.json
 # repo folder
 /repo
 
+# large files
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.xz
+*.iso
+*.img
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.mp3
+*.wav
+*.ogg
+*.flac
+

@@ -1,3 +1,14 @@
+# Video Frame Extraction Utility
+# 
+# This script provides functionality to extract frames from a video file at a specified frame rate.
+# It uses ffmpeg and ffprobe to process the video and extract information.
+#
+# Main components:
+# 1. extract_frames(video_path, output_fps): Extracts frames from the given video at the specified fps
+# 2. main(): Handles user input and calls extract_frames
+#
+# Usage: Run the script and follow the prompts to input video path and desired frame rate.
+
 import subprocess
 import os
 import json
@@ -6,7 +17,11 @@ from datetime import timedelta
 def extract_frames(video_path, output_fps=1):
     # Generate output folder name based on video filename
     video_name = os.path.splitext(os.path.basename(video_path))[0]
-    output_folder = f"output_{video_name}_fps{output_fps}"
+    
+    # Create the output folder in the Data directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(os.path.dirname(script_dir), 'Data')
+    output_folder = os.path.join(data_dir, f"output_{video_name}_fps{output_fps}")
     
     # Create output folder if it doesn't exist
     if not os.path.exists(output_folder):
