@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Comments Extractor",
+  "version": "1.0",
+  "description": "Extract all comments from YouTube videos",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "128": "icons/icon.svg"
+    }
+  },
+  "icons": {
+    "128": "icons/icon.svg"
+  },
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  }
+}

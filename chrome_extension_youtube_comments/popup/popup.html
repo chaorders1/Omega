@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Comments Extractor</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        #comments {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .comment {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        #extractBtn {
+            width: 100%;
+            padding: 8px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #extractBtn:hover {
+            background-color: #cc0000;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #commentLimit {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-group">
+        <label for="commentLimit">Number of comments to extract:</label>
+        <input type="number" id="commentLimit" min="1" max="100" value="10" placeholder="Enter number of comments">
+        <div class="hint">Maximum: 100 comments</div>
+    </div>
+    <button id="extractBtn">Extract Comments</button>
+    <div id="comments"></div>
+    <script type="module" src="popup.js"></script>
+</body>
+</html>
