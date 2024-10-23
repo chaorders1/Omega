@@ -408,7 +408,7 @@ async function getChannelInfo() {
     }
 }
 
-// Auto-reply functionality
+// Update the startAutoReply click handler
 document.getElementById('startAutoReply').addEventListener('click', async () => {
     const replyLimit = parseInt(document.getElementById('replyLimit').value) || 5;
     const replyMessage = document.getElementById('replyMessage').value.trim();
@@ -432,15 +432,13 @@ document.getElementById('startAutoReply').addEventListener('click', async () => 
 
     // Show progress UI
     const progressDiv = document.getElementById('replyProgress');
-    const progressBar = progressDiv.querySelector('.progress-fill');
-    const progressText = progressDiv.querySelector('.progress-text');
     progressDiv.style.display = 'block';
     
     try {
         const results = await new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject(new Error('Operation timeout'));
-            }, 5000);
+            }, 120000); // Changed timeout to 2 minutes
 
             chrome.tabs.sendMessage(tab.id, {
                 action: 'autoReply',
@@ -460,25 +458,93 @@ document.getElementById('startAutoReply').addEventListener('click', async () => 
             throw new Error(results.error);
         }
 
-        progressText.textContent = `Completed: ${results.successful} successful, ${results.failed} failed`;
+        // Show completion message
+        const progressText = progressDiv.querySelector('.progress-text');
+        const progressBar = progressDiv.querySelector('.progress-fill');
+        
+        // Set progress bar to 100%
         progressBar.style.width = '100%';
+        
+        progressText.innerHTML = `
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 10px; text-align: center;">
+                <div style="font-size: 18px; color: #2e7d32; margin-bottom: 10px;">
+                    ✓ Auto Reply Complete!
+                </div>
+                <div style="font-size: 14px; color: #1b5e20;">
+                    Completed at ${results.completionTime || new Date().toLocaleTimeString()}
+                </div>
+                <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div style="background: #c8e6c9; padding: 8px; border-radius: 4px;">
+                        <span style="color: #2e7d32;">✓ Successful: ${results.successful}</span>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 8px; border-radius: 4px;">
+                        <span style="color: #616161;">↷ Skipped: ${results.skipped}</span>
+                    </div>
+                </div>
+                ${results.failed > 0 ? `
+                    <div style="margin-top: 8px; color: #c62828; font-size: 12px;">
+                        Failed attempts: ${results.failed}
+                    </div>
+                ` : ''}
+                <button onclick="window.location.reload()" 
+                    style="margin-top: 15px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Start New Auto Reply
+                </button>
+            </div>
+        `;
 
     } catch (error) {
-        progressText.textContent = `Error: ${error.message}`;
-        progressText.style.color = 'red';
+        const progressText = progressDiv.querySelector('.progress-text');
+        
+        progressText.innerHTML = `
+            <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-top: 10px; text-align: center;">
+                <div style="font-size: 16px; color: #c62828; margin-bottom: 10px;">
+                    ⚠ Error during auto-reply
+                </div>
+                <div style="color: #b71c1c; font-size: 14px;">
+                    ${error.message}
+                </div>
+                <button onclick="window.location.reload()" 
+                    style="margin-top: 10px; padding: 8px 16px; background: #ef5350; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Retry
+                </button>
+            </div>
+        `;
     }
 });
 
-// Add progress update listener
+// Update the progress update listener with better UI
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'updateReplyProgress') {
-        const { current, total, successful, failed } = request.progress;
+        const { current, total, successful, failed, skipped, checked } = request.progress;
         const progressDiv = document.getElementById('replyProgress');
         const progressBar = progressDiv.querySelector('.progress-fill');
         const progressText = progressDiv.querySelector('.progress-text');
 
         const percentage = (current / total) * 100;
         progressBar.style.width = `${percentage}%`;
-        progressText.textContent = `Progress: ${current}/${total} (${successful} successful, ${failed} failed)`;
+
+        // Create a more visually appealing progress display
+        progressText.innerHTML = `
+            <div style="background: #f8f8f8; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">
+                    Progress: ${current}/${total} (${percentage.toFixed(1)}%)
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div style="background: #e8f5e9; padding: 8px; border-radius: 4px;">
+                        <span style="color: #2e7d32;">✓ Successful: ${successful}</span>
+                    </div>
+                    <div style="background: #fafafa; padding: 8px; border-radius: 4px;">
+                        <span style="color: #757575;">↷ Skipped: ${skipped}</span>
+                    </div>
+                    <div style="background: #ffebee; padding: 8px; border-radius: 4px;">
+                        <span style="color: #c62828;">✕ Failed: ${failed}</span>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 8px; border-radius: 4px;">
+                        <span style="color: #1565c0;">☰ Checked: ${checked}</span>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 });

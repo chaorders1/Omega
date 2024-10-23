@@ -224,24 +224,73 @@ async function smoothScrollToTop() {
     });
 }
 
-// Add this function to handle auto-replies
+// Add this function for auto-scrolling to comments section
+async function scrollToComments() {
+    // First scroll to comments section
+    const commentsSection = document.querySelector('#comments');
+    if (!commentsSection) {
+        throw new Error('Comments section not found');
+    }
+
+    // Scroll to comments section smoothly
+    commentsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Scroll a bit to load more comments
+    for (let i = 0; i < 3; i++) {
+        window.scrollBy(0, 500);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    // Scroll back to comments section
+    commentsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+}
+
+// Update the autoReplyToComments function
 async function autoReplyToComments(replyLimit, replyMessage) {
     const results = {
         successful: 0,
         failed: 0,
+        skipped: 0,
         total: replyLimit,
         errors: []
     };
 
     try {
+        // First scroll to load comments
+        await scrollToComments();
+
         // Get all comment threads
         const commentThreads = document.querySelectorAll('ytd-comment-thread-renderer');
         let processedCount = 0;
+        let checkedCount = 0;
 
         for (const thread of commentThreads) {
             if (processedCount >= replyLimit) break;
+            checkedCount++;
 
             try {
+                // Check if we've already replied to this comment
+                const myReplies = thread.querySelectorAll('ytd-comment-renderer.ytd-comment-replies-renderer');
+                const channelName = document.querySelector('#channel-name yt-formatted-string')?.textContent?.trim();
+                let alreadyReplied = false;
+
+                // Check each reply to see if it's from the current user
+                for (const reply of myReplies) {
+                    const replyAuthor = reply.querySelector('#author-text')?.textContent?.trim();
+                    if (replyAuthor === channelName) {
+                        alreadyReplied = true;
+                        break;
+                    }
+                }
+
+                if (alreadyReplied) {
+                    results.skipped++;
+                    console.log('Skipping comment - already replied');
+                    continue;
+                }
+
                 // Find and click the reply button
                 const replyButton = thread.querySelector('#reply-button-end button');
                 if (!replyButton) {
@@ -275,14 +324,16 @@ async function autoReplyToComments(replyLimit, replyMessage) {
                 results.successful++;
                 processedCount++;
 
-                // Report progress
+                // Report progress with skipped count
                 chrome.runtime.sendMessage({
                     action: 'updateReplyProgress',
                     progress: {
                         current: processedCount,
                         total: replyLimit,
                         successful: results.successful,
-                        failed: results.failed
+                        failed: results.failed,
+                        skipped: results.skipped,
+                        checked: checkedCount
                     }
                 });
 
@@ -307,11 +358,16 @@ async function autoReplyToComments(replyLimit, replyMessage) {
             }
         }
 
+        // When complete, add completion status
+        results.completed = true;
+        results.completionTime = new Date().toLocaleTimeString();
+
         return results;
 
     } catch (error) {
         console.error('Auto-reply error:', error);
         results.errors.push(`General error: ${error.message}`);
+        results.completed = false;
         return results;
     }
 }
