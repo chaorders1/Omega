@@ -16,13 +16,24 @@ document.getElementById('extractBtn').addEventListener('click', async () => {
         if (limit > 100) {
             limit = 100;
             document.getElementById('commentLimit').value = 100;
-            // Show a message about the limit
             document.getElementById('comments').innerHTML = 
                 '<p style="color: orange;">Maximum limit is 100 comments. Extracting 100 comments...</p>';
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Show message for 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 1500));
         }
 
-        // Inject and execute the content script
+        // Add loading state
+        const commentsDiv = document.getElementById('comments');
+        const extractBtn = document.getElementById('extractBtn');
+        extractBtn.disabled = true;
+        extractBtn.textContent = 'Extracting...';
+        
+        commentsDiv.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <p>Extracting comments... This may take a while to avoid rate limiting.</p>
+                <p style="color: #666; font-size: 12px;">Please don't close this popup.</p>
+            </div>
+        `;
+
         const results = await chrome.scripting.executeScript({
             target: { tabId: tab.id },
             func: async (desiredComments) => {
@@ -205,6 +216,23 @@ document.getElementById('extractBtn').addEventListener('click', async () => {
         });
 
         const { videoInfo, comments, totalFound, reachedLimit, attempts } = results[0].result;
+        
+        // Update button state and show success message
+        extractBtn.disabled = false;
+        extractBtn.textContent = 'Extract Comments';
+        
+        // Show success message before displaying results
+        commentsDiv.innerHTML = `
+            <div style="background-color: #e6ffe6; color: #006600; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center;">
+                <p style="margin: 0;">✓ Extraction completed successfully!</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">Found ${totalFound} comments, showing ${comments.length}</p>
+            </div>
+        `;
+        
+        // Short delay before showing results
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Display results
         displayVideoInfo(videoInfo);
         displayComments(comments, totalFound, reachedLimit, attempts);
 
@@ -219,9 +247,14 @@ document.getElementById('extractBtn').addEventListener('click', async () => {
         document.querySelector('.export-controls').style.display = 'block';
         
     } catch (error) {
+        const extractBtn = document.getElementById('extractBtn');
+        extractBtn.disabled = false;
+        extractBtn.textContent = 'Extract Comments';
+        
         console.error('Error:', error);
         document.getElementById('comments').innerHTML = 
-            '<p style="color: red;">Error extracting comments: ' + error.message + '</p>';
+            `<p style="color: red;">Error extracting comments: ${error.message}</p>
+             <p style="color: #666; font-size: 12px;">If you see this error frequently, try waiting a few minutes before extracting more comments.</p>`;
     }
 });
 
