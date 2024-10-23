@@ -1,5 +1,38 @@
 <svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
     <rect width="128" height="128" rx="24" fill="#FF0000"/>
-    <path d="M96 64L48 92V36L96 64Z" fill="white"/>
-    <circle cx="64" cy="64" r="48" fill="none" stroke="white" stroke-width="8"/>
+    
+    <!-- Comment Bubble -->
+    <path d="
+        M 30 35
+        h 68
+        a 8 8 0 0 1 8 8
+        v 35
+        a 8 8 0 0 1 -8 8
+        h -40
+        l -15 15
+        v -15
+        h -13
+        a 8 8 0 0 1 -8 -8
+        v -35
+        a 8 8 0 0 1 8 -8
+        z
+    " fill="white"/>
+    
+    <!-- Lines representing text -->
+    <rect x="40" y="48" width="48" height="4" rx="2" fill="#FF0000"/>
+    <rect x="40" y="58" width="38" height="4" rx="2" fill="#FF0000"/>
+    <rect x="40" y="68" width="28" height="4" rx="2" fill="#FF0000"/>
+    
+    <!-- Download Arrow -->
+    <path d="
+        M 85 75
+        l 15 15
+        h -10
+        v 15
+        h -10
+        v -15
+        h -10
+        z
+    " fill="white"/>
 </svg>
