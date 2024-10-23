@@ -4,13 +4,72 @@ const SCROLL_BATCH_SIZE = 5; // Number of scrolls before pause
 const BATCH_PAUSE_MS = 5000; // Pause duration between batches
 const MAX_COMMENTS_PER_BATCH = 20; // Maximum comments to process in one batch
 
-// Listen for messages from the popup
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'extractComments') {
-        extractCommentsWithRateLimit(request.limit).then(sendResponse);
-        return true; // Keep connection open for async response
+// Function to extract channel information
+function getChannelInfo() {
+    try {
+        // Try multiple selectors to find channel name
+        const selectors = [
+            'ytd-channel-name yt-formatted-string.ytd-channel-name a',
+            '#channel-name yt-formatted-string a',
+            '#owner #text a',
+            'ytd-video-owner-renderer .ytd-channel-name a'
+        ];
+
+        for (const selector of selectors) {
+            const element = document.querySelector(selector);
+            if (element && element.textContent) {
+                return {
+                    channelName: element.textContent.trim(),
+                    channelUrl: element.href
+                };
+            }
+        }
+
+        // Fallback method using structured data
+        const structuredData = document.querySelector('script[type="application/ld+json"]');
+        if (structuredData) {
+            const data = JSON.parse(structuredData.textContent);
+            if (data.author) {
+                return {
+                    channelName: data.author.name,
+                    channelUrl: data.author.url
+                };
+            }
+        }
+
+        throw new Error('Channel information not found');
+    } catch (error) {
+        console.error('Error extracting channel info:', error);
+        return {
+            channelName: 'Unknown Channel',
+            channelUrl: null,
+            error: error.message
+        };
     }
-    return true;
+}
+
+// Listen for messages from popup or background script
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'getChannelInfo') {
+        const channelInfo = getChannelInfo();
+        sendResponse(channelInfo);
+    }
+    return true; // Keep the message channel open for async response
+});
+
+// Observe DOM changes to handle dynamic loading
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        if (mutation.type === 'childList' && document.querySelector('ytd-channel-name')) {
+            observer.disconnect();
+            break;
+        }
+    }
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
 });
 
 async function extractCommentsWithRateLimit(desiredComments) {

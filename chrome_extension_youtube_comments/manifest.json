@@ -5,7 +5,17 @@
   "description": "Extract all comments from YouTube videos",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content/content.js"]
+    }
   ],
   "action": {
     "default_popup": "popup/popup.html",

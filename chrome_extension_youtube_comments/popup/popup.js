@@ -385,3 +385,25 @@ function displayComments(comments, totalFound, reachedLimit, attempts) {
         commentsDiv.appendChild(commentDiv);
     });
 }
+
+async function getCurrentTab() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return tab;
+}
+
+async function getChannelInfo() {
+    try {
+        const tab = await getCurrentTab();
+        const response = await chrome.tabs.sendMessage(tab.id, { action: 'getChannelInfo' });
+        
+        if (response.error) {
+            console.error('Error getting channel info:', response.error);
+            return 'Unknown Channel';
+        }
+        
+        return response.channelName;
+    } catch (error) {
+        console.error('Error in getChannelInfo:', error);
+        return 'Unknown Channel';
+    }
+}
