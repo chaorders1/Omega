@@ -160,6 +160,30 @@
             border-bottom: 2px solid #eee;
             margin-bottom: 10px;
         }
+
+        .export-controls {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .export-btn {
+            padding: 8px 16px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .export-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .export-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +193,11 @@
         <div class="hint">Maximum: 100 comments</div>
     </div>
     <button id="extractBtn">Extract Comments</button>
+    <div class="export-controls" style="display: none;">
+        <button id="exportJSON" class="export-btn">
+            Export to JSON
+        </button>
+    </div>
     <div id="comments"></div>
     <script type="module" src="popup.js"></script>
 </body>

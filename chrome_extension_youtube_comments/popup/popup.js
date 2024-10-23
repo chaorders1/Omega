@@ -1,3 +1,6 @@
+// Add this variable at the top of the file
+let extractedData = null;
+
 document.getElementById('extractBtn').addEventListener('click', async () => {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -205,11 +208,51 @@ document.getElementById('extractBtn').addEventListener('click', async () => {
         displayVideoInfo(videoInfo);
         displayComments(comments, totalFound, reachedLimit, attempts);
 
+        // Store the extracted data and show export button
+        extractedData = {
+            videoInfo,
+            comments,
+            totalFound,
+            reachedLimit,
+            attempts
+        };
+        document.querySelector('.export-controls').style.display = 'block';
+        
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('comments').innerHTML = 
-            `<p style="color: red;">Error: ${error.message}</p>`;
+            '<p style="color: red;">Error extracting comments: ' + error.message + '</p>';
     }
+});
+
+// Add this new event listener for the export button
+document.getElementById('exportJSON').addEventListener('click', () => {
+    if (!extractedData) {
+        return;
+    }
+
+    // Create a Blob with the JSON data
+    const jsonString = JSON.stringify(extractedData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    
+    // Create download link
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    // Get video title for filename (or use default)
+    const videoTitle = extractedData.videoInfo?.title || 'youtube-comments';
+    const safeFileName = videoTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    
+    a.href = url;
+    a.download = `${safeFileName}-comments.json`;
+    
+    // Trigger download
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 });
 
 // Add new function to display video information
