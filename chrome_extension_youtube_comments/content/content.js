@@ -53,6 +53,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'getChannelInfo') {
         const channelInfo = getChannelInfo();
         sendResponse(channelInfo);
+    } else if (request.action === 'autoReply') {
+        autoReplyToComments(request.replyLimit, request.replyMessage)
+            .then(results => sendResponse(results))
+            .catch(error => sendResponse({ error: error.message }));
+        return true;
     }
     return true; // Keep the message channel open for async response
 });
@@ -217,4 +222,96 @@ async function smoothScrollToTop() {
     return new Promise(resolve => {
         setTimeout(resolve, 500);
     });
+}
+
+// Add this function to handle auto-replies
+async function autoReplyToComments(replyLimit, replyMessage) {
+    const results = {
+        successful: 0,
+        failed: 0,
+        total: replyLimit,
+        errors: []
+    };
+
+    try {
+        // Get all comment threads
+        const commentThreads = document.querySelectorAll('ytd-comment-thread-renderer');
+        let processedCount = 0;
+
+        for (const thread of commentThreads) {
+            if (processedCount >= replyLimit) break;
+
+            try {
+                // Find and click the reply button
+                const replyButton = thread.querySelector('#reply-button-end button');
+                if (!replyButton) {
+                    throw new Error('Reply button not found');
+                }
+
+                // Click reply and wait for input to appear
+                replyButton.click();
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Find the reply input
+                const replyInput = thread.querySelector('#contenteditable-root');
+                if (!replyInput) {
+                    throw new Error('Reply input not found');
+                }
+
+                // Set reply text and trigger input event
+                replyInput.textContent = replyMessage;
+                replyInput.dispatchEvent(new Event('input', { bubbles: true }));
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Find and click submit button
+                const submitButton = thread.querySelector('#submit-button button');
+                if (!submitButton) {
+                    throw new Error('Submit button not found');
+                }
+
+                submitButton.click();
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                results.successful++;
+                processedCount++;
+
+                // Report progress
+                chrome.runtime.sendMessage({
+                    action: 'updateReplyProgress',
+                    progress: {
+                        current: processedCount,
+                        total: replyLimit,
+                        successful: results.successful,
+                        failed: results.failed
+                    }
+                });
+
+                // Add random delay between replies (2-4 seconds)
+                await new Promise(resolve => 
+                    setTimeout(resolve, 2000 + Math.random() * 2000)
+                );
+
+            } catch (error) {
+                results.failed++;
+                results.errors.push(`Failed to reply to comment: ${error.message}`);
+                
+                // Try to cancel/close reply if error occurs
+                try {
+                    const cancelButton = thread.querySelector('#cancel-button');
+                    if (cancelButton) cancelButton.click();
+                } catch (e) {
+                    console.error('Error canceling reply:', e);
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        return results;
+
+    } catch (error) {
+        console.error('Auto-reply error:', error);
+        results.errors.push(`General error: ${error.message}`);
+        return results;
+    }
 }

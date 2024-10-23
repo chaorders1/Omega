@@ -407,3 +407,78 @@ async function getChannelInfo() {
         return 'Unknown Channel';
     }
 }
+
+// Auto-reply functionality
+document.getElementById('startAutoReply').addEventListener('click', async () => {
+    const replyLimit = parseInt(document.getElementById('replyLimit').value) || 5;
+    const replyMessage = document.getElementById('replyMessage').value.trim();
+    
+    if (!replyMessage) {
+        alert('Please enter a reply message');
+        return;
+    }
+
+    if (replyLimit < 1 || replyLimit > 50) {
+        alert('Please enter a number between 1 and 50');
+        return;
+    }
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (!tab.url.includes('youtube.com/watch')) {
+        alert('Please open a YouTube video first!');
+        return;
+    }
+
+    // Show progress UI
+    const progressDiv = document.getElementById('replyProgress');
+    const progressBar = progressDiv.querySelector('.progress-fill');
+    const progressText = progressDiv.querySelector('.progress-text');
+    progressDiv.style.display = 'block';
+    
+    try {
+        const results = await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('Operation timeout'));
+            }, 5000);
+
+            chrome.tabs.sendMessage(tab.id, {
+                action: 'autoReply',
+                replyLimit: replyLimit,
+                replyMessage: replyMessage
+            }, (response) => {
+                clearTimeout(timeout);
+                if (chrome.runtime.lastError) {
+                    reject(new Error(chrome.runtime.lastError.message));
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+
+        if (results.error) {
+            throw new Error(results.error);
+        }
+
+        progressText.textContent = `Completed: ${results.successful} successful, ${results.failed} failed`;
+        progressBar.style.width = '100%';
+
+    } catch (error) {
+        progressText.textContent = `Error: ${error.message}`;
+        progressText.style.color = 'red';
+    }
+});
+
+// Add progress update listener
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'updateReplyProgress') {
+        const { current, total, successful, failed } = request.progress;
+        const progressDiv = document.getElementById('replyProgress');
+        const progressBar = progressDiv.querySelector('.progress-fill');
+        const progressText = progressDiv.querySelector('.progress-text');
+
+        const percentage = (current / total) * 100;
+        progressBar.style.width = `${percentage}%`;
+        progressText.textContent = `Progress: ${current}/${total} (${successful} successful, ${failed} failed)`;
+    }
+});
